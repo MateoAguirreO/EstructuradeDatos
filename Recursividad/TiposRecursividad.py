@@ -38,9 +38,34 @@ def Fib(n):
     
     return Fib(n-1) + Fib(n-2)
 
-n = 12
-m = 18
+def BinDec(n):
+    """
+    Función que convierte el # n en base 2 a numero en base 10.
+    Se implementa usando Recursividad Lineal No Final.
+    """
+    
+    s = str(n)
+    if(len(s) == 1):
+        return n
+    mult = pow(2, (len(s)-1)) * int(s[0])
+    
+    return mult + BinDec(int(s[1:len(s)]))
 
-print("Fibonacci en {}: {}".format(n, Fib(n)))
+def DecBin(n):
+    """
+    Función que convierte el # n en base 10 a numero en base 2.
+    Se implementa usando Recursividad Lineal No Final.
+    """
+    
+    if(n < 2):
+        return n
+    
+    return n%2 + (10 * DecBin(n//2))
+
+m = 110101
+n = 53
+
+#print("Fibonacci en {}: {}".format(n, Fib(n)))
 #print("MCD entre {} y {}: {}".format(n, m, MCD(n,m)))
 #print("Factorial de ", Factorial(n))
+print("Decimal: ", n, " a Binario es: ", DecBin(n))
