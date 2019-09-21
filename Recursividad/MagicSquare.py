@@ -6,7 +6,7 @@ Created on Thu Sep 19 15:28:01 2019
 """
 
 global n
-n = 8
+n = 3
 
 board = [[0 for i in range(n)] for j in range(n)]
 
@@ -36,7 +36,9 @@ def SolveSquare(board, row, col):
             elif(SolveSquare(board, row, col+1)):
                 return True
             board[row][col] = 0
-            
+    
+    return False
+    
 def printBoard(board):
     if(SolveSquare(board, 0, 0)):
         for row in board:
