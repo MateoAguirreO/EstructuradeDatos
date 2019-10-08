@@ -20,11 +20,45 @@ class Node:
         if(self.leftChild):
             return True
         return False
-
+    
+    def getLeftChild(self):
+        return self.leftChild
+    
+    def setLeftChild(self, leftC):
+        self.leftChild = leftC
+    
     def hasRightChild(self):
         if(self.rightChild):
             return True
+        
+    def getRightChild(self):
+        return self.rightChild
+    
+    def setRightChild(self, rightC):
+        self.rightChild = rightC
+    
+    def getParent(self):
+        return self.parent
+    
+    def setParent(self, p):
+        self.parent = p
+    
+    def isLeaf(self):
+        return (not self.leftChild and not self.rightChild)
+    
+    def isRightChild(self):
+        return (self.getParent().hasRightChild() and self.value == self.parent.rightChild.value)
+    
+    def isLeftChild(self):
+        return (self.getParent().hasLeftChild() and self.value == self.parent.leftChild.value)
+    
+    def hasGrandPa(self):
+        if(self.parent.parent is not None):
+            return True
         return False
+    
+    def getGrandPa(self):
+        return self.parent.parent
 
 
 class BST:
@@ -267,10 +301,16 @@ class BST:
 
     #     return False
 
+#
+#listofNodes = [54, 26, 8, 77, 63, 35, 43, 69, 59, 56, 55, 58, 86, 79, 100]
+#
+#myBST = BST()
+#myBST.addNodes(listofNodes)
+#
+## Remove 8, 77, 86
+#
+#l = myBST.preOrd()
+#
+#for node in l:
+#    print(node.value, end=', ')
 
-listofNodes = [45, 83, 62, 17, 25, 36, 54, 105, 86, 91, 68, 75, 23, 18, 3]
-
-myBST = BST()
-myBST.addNodes(listofNodes)
-
-myBST.nodeXtoYcore(17, 18)
