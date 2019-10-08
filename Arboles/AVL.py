@@ -10,17 +10,32 @@ class AVL:
 
         return 1 + self.getNodeLevel(nodeP, nodeC.getParent())
     
-    def getNodeDepth(self, nodeP, list=[]):
-        nodes = self._preOrd(nodeP, [])
-        nodes.pop(0)
-        
-        if(not nodes):
+    def getNodeDepth(self, node):        
+        if(node):
+            if(node.isLeaf()):
+                return 1
+            
+            lw = self.getNodeDepth(node.getLeftChild())
+            rw = self.getNodeDepth(node.getRightChild())
+            
+            return (max(lw, rw) + 1)
+        else:
+            return 0
+    
+    def getBalanceFactor(self, node):
+        if(node.isLeaf()):
             return 0
         
-        for node in nodes:
-            list.append(self.getNodeLevel(nodeP, node))
+        leftD, rightD = 0, 0
         
-        return max(list)
+        if(node.hasLeftChild()):
+            leftD = self.getNodeDepth(node.getLeftChild())
+        
+        if(node.hasRightChild()):
+            rightD = self.getNodeDepth(node.getRightChild())
+        
+        return leftD - rightD
+        
     
     def addNodes(self, list):
         for node in list:
@@ -78,5 +93,6 @@ for node in l:
     
 print("")
 
-print(myAVL)
+for n in l:
+    print(myAVL.getBalanceFactor(n), end=', ')
     
