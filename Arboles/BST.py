@@ -59,6 +59,9 @@ class Node:
     
     def getGrandPa(self):
         return self.parent.parent
+    
+    def isRoot(self):
+        return (self.parent is None)
 
 
 class BST:

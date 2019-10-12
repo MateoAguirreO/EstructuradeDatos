@@ -4,12 +4,6 @@ class AVL:
     def __init__(self):
         self.root = None
     
-    def getNodeLevel(self, nodeP, nodeC):
-        if(nodeC.getParent() == nodeP):
-            return 1
-
-        return 1 + self.getNodeLevel(nodeP, nodeC.getParent())
-    
     def getNodeDepth(self, node):        
         if(node):
             if(node.isLeaf()):
@@ -23,19 +17,85 @@ class AVL:
             return 0
     
     def getBalanceFactor(self, node):
+        if(not node):
+            return 0
+        
         if(node.isLeaf()):
             return 0
         
         leftD, rightD = 0, 0
         
-        if(node.hasLeftChild()):
-            leftD = self.getNodeDepth(node.getLeftChild())
-        
-        if(node.hasRightChild()):
-            rightD = self.getNodeDepth(node.getRightChild())
+        leftD = self.getNodeDepth(node.getLeftChild())
+        rightD = self.getNodeDepth(node.getRightChild())
         
         return leftD - rightD
+    
+    def verifyBalance(self, node):
+        bF = self.getBalanceFactor(node)
         
+        if(bF >= -1 and bF <= 1):
+            if(not node.isRoot()):
+                self.verifyBalance(node.getParent())
+        else:
+            if(bF > 0):
+                leftC = node.getLeftChild()
+                leftCbF = self.getBalanceFactor(leftC)
+                
+                if(leftCbF > 0):
+                    self.turnLL(leftC, leftC.getLeftChild())
+                else:
+                    self.turnLR(leftC, leftC.getRightChild())
+            else:
+                rightC = node.getRightChild()
+                rightCbF = self.getBalanceFactor(rightC)
+                
+                if(rightCbF > 0):
+                    self.turnRL(rightC, rightC.getLeftChild())
+                else:
+                    self.turnRR(rightC, rightC.getRightChild())
+    
+    def turnLL(self, pivot, grandSon):
+        grandPa = pivot.getParent()
+        grandSon.setParent(grandPa)
+        
+        if(pivot.isLeftChild):
+            grandPa.setLeftChild(grandSon)
+        else:
+            grandPa.setRightChild(grandSon)
+        
+        pivot.setParent(grandSon)
+        
+        if(grandSon.hasRightChild()):
+            pivot.setLeftChild(grandSon.getRightChild())
+            grandSon.getRightChild().setParent(pivot)
+        
+        grandSon.setRightChild(pivot)
+    
+    def turnLR(self, pivot, grandSon):
+        self.turnLL(grandSon, grandSon.getRightChild())
+        self.turnRR(pivot, pivot.getLeftChild())
+    
+    def turnRR(self, pivot, grandSon):
+        grandPa = pivot.getParent()
+        grandSon.setParent(grandPa)
+        
+        if(pivot.isLeftChild):
+            grandPa.setLeftChild(grandSon)
+        else:
+            grandPa.setRightChild(grandSon)
+        
+        pivot.setParent(grandSon)
+        
+        if(grandSon.hasLeftChild()):
+            pivot.setRightChild(grandSon.getLeftChild())
+            grandSon.getLeftChild().setParent(pivot)
+        
+        grandSon.setLeftChild(pivot)
+    
+    def turnRL(self, pivot, grandSon):
+        self.turnRR(grandSon, grandSon.getLeftChild())
+        self.turnLL(pivot, pivot.getRightChild())
+            
     
     def addNodes(self, list):
         for node in list:
@@ -48,18 +108,23 @@ class AVL:
             self.root = Node(label, value, None)
 
     def _addNode(self, label, value, parent):
+        newNode = Node(label, value, parent)
+        
         if(value > parent.value):
             if(parent.rightChild):
                 self._addNode(label, value, parent.rightChild)
             else:
-                parent.rightChild = Node(label, value, parent)
+                parent.setRightChild(newNode)
         elif(value < parent.value):
             if(parent.leftChild):
                 self._addNode(label, value, parent.leftChild)
             else:
-                parent.leftChild = Node(label, value, parent)
+                parent.setLeftChild(newNode)
         else:
             print(f"Node {str(value)} already exists!")
+        
+        if(not newNode.isRoot() and not newNode.getParent().isRoot() and not newNode.getGrandPa().isRoot()):
+            self.verifyBalance(newNode.getGrandPa())
     
     def preOrd(self):
         if(self.root):
@@ -93,6 +158,4 @@ for node in l:
     
 print("")
 
-for n in l:
-    print(myAVL.getBalanceFactor(n), end=', ')
     
